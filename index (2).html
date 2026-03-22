@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>HealAI — Quick Survey</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+:root {
+  --green: #00c896;
+  --green-dark: #00a07a;
+  --green-light: #e6faf5;
+  --text: #1a2332;
+  --muted: #6b7c93;
+  --border: #e8eef4;
+  --bg: #f4f8fb;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 20px 16px 60px;
+}
+.card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 28px 22px;
+  max-width: 460px;
+  width: 100%;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  height: fit-content;
+}
+.logo { font-size: 1.5rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+.logo span { color: var(--green); }
+.tagline { font-size: 0.75rem; color: var(--muted); margin-bottom: 20px; }
+.intro-box {
+  background: linear-gradient(135deg, #0b1a2e, #0d2d1e);
+  border-radius: 14px; padding: 18px 20px; margin-bottom: 20px;
+}
+.intro-box p { font-size: 0.9rem; color: rgba(255,255,255,0.88); line-height: 1.7; }
+.intro-box strong { color: var(--green); }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--green-light); border: 1px solid rgba(0,200,150,0.3);
+  border-radius: 50px; padding: 5px 13px;
+  font-size: 0.72rem; font-weight: 600; color: var(--green-dark); margin-bottom: 20px;
+}
+.dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.prog-wrap { margin-bottom: 24px; }
+.prog-top { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-bottom: 6px; }
+.prog-bg { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--green-dark)); border-radius: 3px; width: 0%; transition: width 0.4s ease; }
+.step { display: none; }
+.step.active { display: block; }
+.q-tag { font-size: 0.68rem; font-weight: 700; color: var(--green); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.q-text { font-size: 1.05rem; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 16px; }
+.q-sub { font-size: 0.75rem; color: var(--muted); font-weight: 400; }
+.opts { display: flex; flex-direction: column; gap: 9px; margin-bottom: 18px; }
+.opt {
+  padding: 12px 14px; background: var(--bg);
+  border: 2px solid var(--border); border-radius: 11px;
+  font-size: 0.875rem; font-weight: 500; color: var(--text);
+  cursor: pointer; transition: all 0.18s;
+  display: flex; align-items: center; gap: 11px; user-select: none;
+}
+.opt.sel { border-color: var(--green); background: var(--green-light); color: var(--green-dark); }
+.radio {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid #cdd5e0; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; transition: all 0.18s;
+}
+.opt.sel .radio { background: var(--green); border-color: var(--green); }
+.opt.sel .radio::after { content: ''; width: 6px; height: 6px; background: white; border-radius: 50%; display: block; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.chip {
+  padding: 8px 14px; background: var(--bg);
+  border: 2px solid var(--border); border-radius: 50px;
+  font-size: 0.8rem; font-weight: 500; color: var(--text);
+  cursor: pointer; transition: all 0.18s; user-select: none;
+}
+.chip.sel { background: var(--green-light); border-color: var(--green); color: var(--green-dark); }
+textarea, input[type=text] {
+  width: 100%; padding: 12px 14px;
+  background: var(--bg); border: 2px solid var(--border);
+  border-radius: 11px; font-family: inherit;
+  font-size: 0.875rem; color: var(--text);
+  outline: none; transition: border-color 0.2s; margin-bottom: 18px;
+}
+textarea { resize: none; min-height: 90px; line-height: 1.7; }
+textarea:focus, input:focus { border-color: var(--green); background: white; }
+.scale-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+.sc {
+  width: 42px; height: 42px; border-radius: 10px;
+  border: 2px solid var(--border); background: var(--bg);
+  font-size: 0.82rem; font-weight: 700; cursor: pointer; color: var(--text); transition: all 0.18s;
+}
+.sc.sel { background: var(--green); border-color: var(--green); color: white; box-shadow: 0 3px 10px rgba(0,200,150,0.3); }
+.sc-lbl { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--muted); margin-bottom: 18px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+.flabel { font-size: 0.72rem; font-weight: 700; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; display: block; }
+.btn-next {
+  width: 100%; padding: 15px;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: white; border: none; border-radius: 12px;
+  font-family: inherit; font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; box-shadow: 0 5px 18px rgba(0,200,150,0.3);
+  transition: all 0.2s; margin-bottom: 10px;
+}
+.btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-back {
+  width: 100%; padding: 12px; background: transparent; color: var(--muted);
+  border: 2px solid var(--border); border-radius: 12px;
+  font-family: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+}
+#successDiv { display: none; text-align: center; padding: 20px 10px; }
+.s-emoji { font-size: 3.5rem; margin-bottom: 16px; display: block; animation: pop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both; }
+@keyframes pop { from{transform:scale(0.3);opacity:0} to{transform:scale(1);opacity:1} }
+.s-title { font-size: 1.5rem; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+.s-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.8; margin-bottom: 24px; }
+.wa-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px; background: #25D366; color: white;
+  border: none; border-radius: 50px; font-family: inherit;
+  font-size: 0.9rem; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+}
+#toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: #1a2332; color: white;
+  padding: 11px 22px; border-radius: 50px;
+  font-size: 0.82rem; font-weight: 500;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease; z-index: 999;
+  white-space: nowrap; pointer-events: none;
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="logo">Heal<span>AI</span></div>
+  <div class="tagline">AI Medical Assistant for Every Human</div>
+
+  <div class="intro-box">
+    <p>👋 Hey! I'm building <strong>HealAI</strong> — an AI-powered health assistant for doctors, nurses &amp; patients across India.<br><br>Takes just <strong>2 minutes</strong> — your honest thoughts mean a lot 🙏</p>
+  </div>
+
+  <div class="pill"><span class="dot"></span> 2 min &nbsp;·&nbsp; 6 questions</div>
+
+  <div class="prog-wrap">
+    <div class="prog-top">
+      <span id="progLabel">Question 1 of 6</span>
+      <span id="progPct">0%</span>
+    </div>
+    <div class="prog-bg"><div class="prog-fill" id="progFill"></div></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step active" id="s1">
+    <div class="q-tag">Question 1 of 6</div>
+    <div class="q-text">Have you heard of HealAI before? 👂</div>
+    <div class="opts" id="heardOpts">
+      <div class="opt" onclick="pick(this)"><span class="radio"></span>✅ Yes, I've heard of it</div>
+      <div class="opt" onclick="pick(this)"><span class="radio"></span>🤔 Seen the name somewhere</div>
+      <div class="opt" onclick="pick(this)"><span class="radio"></span>❌ Nope, first time hearing</div>
+    </div>
+    <button class="btn-next" onclick="go(2)">Next →</button>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step" id="s2">
+    <div class="q-tag">Question 2 of 6</div>
+    <div class="q-text">What best describes you? 🙋</div>
+    <div class="opts" id="whoOpts">
+      <div class="opt" onclick="pick(this)"><span class="radio"></span>🩺 Doctor / Nurse / Health Worker</div>
+      <div class="opt" onclick="pick(this)"><span class="radio"></span>🧑 Patient / Someone who visits doctors</div>
+      <div class="opt" onclick="pick(this)"><span class="radio"></span>👨‍👩‍👧 Family member / Caregiver</div>
+      <div class="opt" onclick="pick(this)"><span class="radio"></span>💻 Tech / Startup person</div>
+      <div class="opt" onclick="pick(this)"><span class="radio"></span>👤 Other</div>
+    </div>
+    <button class="btn-next" onclick="go(3)">Next →</button>
+    <button class="btn-back" onclick="go(1)">← Back</button>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step" id="s3">
+    <div class="q-tag">Question 3 of 6</div>
+    <div class="q-text">What health problems do you face most? <span class="q-sub">(pick all that apply)</span></div>
+    <div class="chips">
+      <div class="chip" onclick="toggleChip(this)">😷 Fast diagnosis</div>
+      <div class="chip" onclick="toggleChip(this)">💊 Right medicines</div>
+      <div class="chip" onclick="toggleChip(this)">🏥 Finding doctors</div>
+      <div class="chip" onclick="toggleChip(this)">💸 High costs</div>
+      <div class="chip" onclick="toggleChip(this)">📍 Doctor not nearby</div>
+      <div class="chip" onclick="toggleChip(this)">🌐 Language barrier</div>
+      <div class="chip" onclick="toggleChip(this)">⏰ Long waiting times</div>
+      <div class="chip" onclick="toggleChip(this)">📋 Medical records</div>
+    </div>
+    <button class="btn-next" onclick="go(4)">Next →</button>
+    <button class="btn-back" onclick="go(2)">← Back</button>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step" id="s4">
+    <div class="q-tag">Question 4 of 6</div>
+    <div class="q-text">If HealAI solved ONE thing for you, what would it be? 🎯</div>
+    <textarea id="oneThingText" placeholder="e.g. Tell me what's wrong before I visit a doctor, suggest medicines for fever..."></textarea>
+    <button class="btn-next" onclick="go(5)">Next →</button>
+    <button class="btn-back" onclick="go(3)">← Back</button>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step" id="s5">
+    <div class="q-tag">Question 5 of 6</div>
+    <div class="q-text">How excited are you about an AI health assistant? 🚀</div>
+    <div class="scale-row" id="exciteScale">
+      <button class="sc" onclick="pickScale(this,1)">1</button>
+      <button class="sc" onclick="pickScale(this,2)">2</button>
+      <button class="sc" onclick="pickScale(this,3)">3</button>
+      <button class="sc" onclick="pickScale(this,4)">4</button>
+      <button class="sc" onclick="pickScale(this,5)">5</button>
+      <button class="sc" onclick="pickScale(this,6)">6</button>
+      <button class="sc" onclick="pickScale(this,7)">7</button>
+      <button class="sc" onclick="pickScale(this,8)">8</button>
+      <button class="sc" onclick="pickScale(this,9)">9</button>
+      <button class="sc" onclick="pickScale(this,10)">10</button>
+    </div>
+    <div class="sc-lbl"><span>Not at all 😐</span><span>Super excited 🤩</span></div>
+    <button class="btn-next" onclick="go(6)">Next →</button>
+    <button class="btn-back" onclick="go(4)">← Back</button>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="step" id="s6">
+    <div class="q-tag">Question 6 of 6</div>
+    <div class="q-text">Anything else to tell me? 💬</div>
+    <textarea id="finalText" placeholder="Any thoughts, suggestions, concerns — totally honest 🙏"></textarea>
+    <hr>
+    <label class="flabel">Your name (optional)</label>
+    <input type="text" id="nameInput" placeholder="e.g. Ravi, Priya..." />
+    <button class="btn-next" id="submitBtn" onclick="submitForm()">🎯 Submit My Feedback</button>
+    <button class="btn-back" onclick="go(5)">← Back</button>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="successDiv">
+    <span class="s-emoji">🙏</span>
+    <div class="s-title">Thank you so much!</div>
+    <p class="s-desc">Your feedback means a lot. I'm building HealAI to make quality healthcare accessible to every Indian.<br><br>I'll share the website with you very soon! 🚀</p>
+    <button class="wa-btn" onclick="shareWA()">💬 Share with friends too</button>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+var cur = 1;
+var exciteVal = null;
+
+function go(n) {
+  if (n > cur) {
+    if (cur === 1 && !document.querySelector('#heardOpts .sel')) { toast('👆 Please pick an option'); return; }
+    if (cur === 2 && !document.querySelector('#whoOpts .sel')) { toast('👆 Please select what describes you'); return; }
+  }
+  document.getElementById('s' + cur).classList.remove('active');
+  document.getElementById('s' + n).classList.add('active');
+  cur = n;
+  var pct = Math.round(((n - 1) / 6) * 100);
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progPct').textContent = pct + '%';
+  document.getElementById('progLabel').textContent = 'Question ' + n + ' of 6';
+  window.scrollTo(0, 0);
+}
+
+function pick(el) {
+  var all = el.parentNode.querySelectorAll('.opt');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('sel');
+  el.classList.add('sel');
+}
+
+function toggleChip(el) {
+  el.classList.toggle('sel');
+}
+
+function pickScale(el, val) {
+  exciteVal = val;
+  var btns = document.querySelectorAll('#exciteScale .sc');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('sel');
+  el.classList.add('sel');
+}
+
+function submitForm() {
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Submitting…';
+
+  var heard = document.querySelector('#heardOpts .sel');
+  var who = document.querySelector('#whoOpts .sel');
+  var selChips = document.querySelectorAll('.chips .sel');
+  var problems = [];
+  for (var i = 0; i < selChips.length; i++) problems.push(selChips[i].textContent.trim());
+
+  var data = {
+    heard: heard ? heard.textContent.trim() : '',
+    who: who ? who.textContent.trim() : '',
+    problems: problems,
+    oneThing: document.getElementById('oneThingText').value,
+    excitement: exciteVal,
+    finalThoughts: document.getElementById('finalText').value,
+    name: document.getElementById('nameInput').value,
+    time: new Date().toISOString()
+  };
+
+  console.log('HealAI Survey:', JSON.stringify(data, null, 2));
+  // To save responses, replace console.log with:
+  // fetch('YOUR_ENDPOINT', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) })
+
+  setTimeout(function() {
+    document.getElementById('s6').classList.remove('active');
+    document.getElementById('progFill').style.width = '100%';
+    document.getElementById('progPct').textContent = '100%';
+    document.getElementById('successDiv').style.display = 'block';
+  }, 1000);
+}
+
+function shareWA() {
+  var msg = encodeURIComponent("Hey! 👋 My friend is building HealAI — an AI health assistant for India 🇮🇳\n\nQuick 2 min feedback survey:\n" + window.location.href);
+  window.open('https://wa.me/?text=' + msg, '_blank');
+}
+
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2800);
+}
+</script>
+</body>
+</html>
